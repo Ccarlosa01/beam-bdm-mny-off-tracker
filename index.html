@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MNY BDM Tracker Off</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">MNY BDM Tracker</p>
+        <h1>Off Premise Tracker</h1>
+        <p class="subtitle">
+          Upload your Excel file, import the source tabs into Google Sheets, then generate a clean tracker report.
+        </p>
+      </div>
+
+      <div class="upload-card">
+        <label for="excelUpload">Upload Excel File</label>
+        <input type="file" id="excelUpload" accept=".xlsx,.xls" />
+        <button id="uploadBtn">Upload to Database</button>
+        <p id="uploadStatus" class="status-text">No file uploaded yet.</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <h2>Tracker Filters</h2>
+          <p>Select a team, sales rep, and up to six accounts.</p>
+        </div>
+        <button id="refreshBtn" class="secondary">Refresh Data</button>
+      </div>
+
+      <div class="filter-grid">
+        <label>
+          Team
+          <select id="teamSelect">
+            <option value="">Select Team</option>
+          </select>
+        </label>
+
+        <label>
+          Sales Rep
+          <select id="repSelect">
+            <option value="">Select Sales Rep</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="accounts-grid" id="accountSelectors"></div>
+    </section>
+
+    <section class="summary-grid">
+      <div class="summary-card">
+        <span>POD Rows</span>
+        <strong id="podRowCount">0</strong>
+      </div>
+      <div class="summary-card">
+        <span>Display Rows</span>
+        <strong id="displayRowCount">0</strong>
+      </div>
+      <div class="summary-card">
+        <span>Coldbox Rows</span>
+        <strong id="coldboxRowCount">0</strong>
+      </div>
+    </section>
+
+    <section class="panel printable" id="trackerReport">
+      <div class="report-title-row">
+        <div>
+          <h2>MNY BDM Tracker Off Premise</h2>
+          <p id="reportSubTitle">Select filters to generate the report.</p>
+        </div>
+        <button id="printBtn" class="secondary">Print / Save PDF</button>
+      </div>
+
+      <div id="podBtgSection"></div>
+      <div id="displayBtgSection"></div>
+      <div id="coldboxSection"></div>
+      <div id="accountBreakdownSection"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
