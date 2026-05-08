@@ -2,16 +2,14 @@
  * GitHub Pages Frontend for MNY BDM Tracker Off
  */
 
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwqewiW9L0OxI57pz7HnSG07tGJOgewfqlpJVswhZOfP9anuoGIh9W_BGFIt5WO9ieu/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwfQzwaxjvSRMhMjlJ8OGdyM8pH8jV0aiYnZjeamksgSY2Rd7hbm9t0LrP1lt-_PZlj/exec";
 const UPLOAD_KEY = ""; // Must match Code.gs UPLOAD_KEY if you set one.
 
 let trackerData = {
   podFlat: [],
   podBob: [],
   displayFlat: [],
-  displayBob: [],
-  coldboxFlat: [],
-  coldboxBob: []
+  displayBob: []
 };
 
 const state = {
@@ -120,16 +118,16 @@ async function loadTrackerData() {
 
   trackerData = {
     podFlat: result.data.POD_Flat || [],
-    podBob: result.data.POD_BOB_CLEAN?.length ? result.data.POD_BOB_CLEAN : (result.data.POD_BOB_MNY || []),
+    podBob: result.data.POD_BOB_MNY || [],
     displayFlat: result.data.Display_Flat || [],
-    displayBob: result.data.Display_BOB || [],
-    coldboxFlat: result.data.Coldbox_Flat || [],
-    coldboxBob: result.data.Coldbox_BOB || []
+    displayBob: result.data.Display_BOB || []
   };
-
-  document.getElementById("podRowCount").textContent = trackerData.podFlat.length.toLocaleString();
-  document.getElementById("displayRowCount").textContent = trackerData.displayFlat.length.toLocaleString();
-  document.getElementById("coldboxRowCount").textContent = trackerData.coldboxFlat.length.toLocaleString();
+  
+  document.getElementById("podRowCount").textContent =
+    trackerData.podFlat.length.toLocaleString();
+  
+  document.getElementById("displayRowCount").textContent =
+    trackerData.displayFlat.length.toLocaleString();
 
   populateTeamDropdown();
   populateRepDropdown();
@@ -215,6 +213,7 @@ function getAccountsByRep(rep) {
 
 function renderReport() {
   const subtitle = document.getElementById("reportSubTitle");
+
   subtitle.textContent = [
     state.team || "No team selected",
     state.rep || "No rep selected"
@@ -222,7 +221,6 @@ function renderReport() {
 
   renderPodBtg();
   renderDisplayBtg();
-  renderColdbox();
   renderAccountBreakdowns();
 }
 
@@ -366,65 +364,6 @@ function renderDisplayBtg() {
                 <td class="numeric">${formatPercent(row.repAch)}</td>
                 <td class="numeric ${row.teamBtg < 0 ? "bad" : "good"}">${formatNumber(row.teamBtg)}</td>
                 <td class="numeric">${formatPercent(row.teamAch)}</td>
-              </tr>
-            `).join("")}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  `;
-}
-
-function renderColdbox() {
-  const section = document.getElementById("coldboxSection");
-
-  const brandGroups = uniqueSorted(
-    trackerData.coldboxFlat
-      .filter(row => getField(row, ["Premise"]) === "OFF")
-      .map(row => getField(row, ["Brand"]))
-      .filter(Boolean)
-  );
-
-  if (!brandGroups.length) {
-    section.innerHTML = emptySection("Coldbox", "No Coldbox data loaded.");
-    return;
-  }
-
-  const selectedAccounts = state.accounts.filter(Boolean);
-
-  const rows = brandGroups.map(brand => {
-    const accountStatuses = selectedAccounts.map(account => {
-      const matchingRows = trackerData.coldboxBob.filter(row =>
-        same(getField(row, ["Customer", "Account", "Customer Name"]), account) &&
-        same(getField(row, ["Brand", "Brand Goal Group"]), brand)
-      );
-
-      const qualified = matchingRows.some(row =>
-        Number(getField(row, ["Qualifier Met", "QualifierMet", "PODs"]) || 0) !== 0
-      );
-
-      return qualified ? "Yes" : "";
-    });
-
-    return { brand, accountStatuses };
-  });
-
-  section.innerHTML = `
-    <div class="report-section">
-      <div class="section-title">Coldbox Qualification</div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Brand</th>
-              ${selectedAccounts.map((account, i) => `<th>${escapeHtml(account || "Account " + (i + 1))}</th>`).join("")}
-            </tr>
-          </thead>
-          <tbody>
-            ${rows.map(row => `
-              <tr>
-                <td>${escapeHtml(row.brand)}</td>
-                ${row.accountStatuses.map(status => `<td class="${status ? "good" : ""}">${status}</td>`).join("")}
               </tr>
             `).join("")}
           </tbody>
