@@ -2,7 +2,7 @@
  * GitHub Pages Frontend for MNY BDM Tracker Off
  */
 
-const APPS_SCRIPT_URL = "PASTE_YOUR_DEPLOYED_APPS_SCRIPT_WEB_APP_URL_HERE";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwqewiW9L0OxI57pz7HnSG07tGJOgewfqlpJVswhZOfP9anuoGIh9W_BGFIt5WO9ieu/exec";
 const UPLOAD_KEY = ""; // Must match Code.gs UPLOAD_KEY if you set one.
 
 let trackerData = {
